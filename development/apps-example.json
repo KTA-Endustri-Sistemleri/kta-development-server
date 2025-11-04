@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://github.com/frappe/erpnext.git",
+    "branch": "version-15"
+  },
+  {
+    "url": "https://github.com/frappe/hrms.git",
+    "branch": "version-15"
+  },
+  {
+    "url": "https://github.com/frappe/print_designer.git",
+    "branch": "main"
+  },
+  {
+    "url": "https://github.com/Framras/trtcmb.git",
+    "branch": "version-15"
+  },
+  {
+    "url": "https://github.com/Framras/trtaxoffices.git",
+    "branch": "version-15"
+  },
+  {
+    "url": "https://github.com/Framras/trebelge.git",
+    "branch": "version-15"
+  },
+  {
+    "url": "https://github.com/KTA-Endustri-Sistemleri/qr_scanner.git",
+    "branch": "main"
+  }
+]
