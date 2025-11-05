@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install tooling
+        run: |
+          pip install pre-commit ruff black yamllint check-jsonschema
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
+  compose-smoke:
+    name: Docker Compose Smoke (optional)
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: docker compose version
+
+      - name: Launch core services (short)
+        working-directory: ./development
+        run: |
+          docker compose up -d mariadb redis-cache redis-queue
+          sleep 10
+          docker ps
+
+      - name: Health check (MariaDB ping)
+        run: |
+          docker run --rm --network host --entrypoint sh mariadb:11.8 -c \
+            "mysqladmin ping -h 127.0.0.1 -P 3306 -uroot -p123 --silent || exit 1"
+
+      - name: Shutdown
+        if: always()
+        working-directory: ./development
+        run: docker compose down -v
