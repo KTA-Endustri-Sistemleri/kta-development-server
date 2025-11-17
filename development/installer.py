@@ -31,6 +31,7 @@ def main():
     args = parser.parse_args()
     init_bench_if_not_exist(args)
     create_site_in_bench(args)
+    restore_database_if_exists(args)
 
 
 def get_args_parser():
@@ -240,6 +241,37 @@ def create_site_in_bench(args):
         cwd=os.getcwd() + "/" + args.bench_name,
     )
 
+
+def restore_database_if_exists(args):
+    # Yedek dosyasının adı ve yeri
+    backup_filename = "database.sql.gz"
+    backup_path = os.path.join(os.getcwd(), backup_filename)
+
+    if not os.path.isfile(backup_path):
+        cprint(f"{backup_filename} bulunamadı, database restore atlanıyor.", level=3)
+        return
+
+    cprint(f"{backup_filename} bulundu. Database restore başlatılıyor...", level=2)
+
+    # bench restore komutu
+    # Önemli: --site ve --force parametreleri COMMAND'dan (restore) ÖNCE geliyor
+    restore_cmd = [
+        "bench",
+        "--site",
+        args.site_name,
+        "--force",
+        "restore",
+        backup_path,
+    ]
+
+    try:
+        subprocess.call(
+            restore_cmd,
+            cwd=os.path.join(os.getcwd(), args.bench_name),
+        )
+        cprint("Database restore işlemi tamamlandı.", level=2)
+    except subprocess.CalledProcessError as e:
+        cprint(f"Database restore sırasında hata oluştu: {e}", level=1)
 
 if __name__ == "__main__":
     main()
