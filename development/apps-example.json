@@ -24,6 +24,10 @@
     "branch": "version-15"
   },
   {
+    "url": "https://github.com/KTA-Endustri-Sistemleri/erpnextkta.git",
+    "branch": "master"
+  },
+  {
     "url": "https://github.com/KTA-Endustri-Sistemleri/qr_scanner.git",
     "branch": "main"
   }
