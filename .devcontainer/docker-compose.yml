@@ -83,6 +83,12 @@ services:
   #     - /tmp/.X11-unix:/tmp/.X11-unix
   #     - ..:/workspace:z,cached
   #   network_mode: "host"
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    depends_on:
+      - frappe
+    command: tunnel --no-autoupdate --url http://frappe:8000
+    # Not: 'frappe' Compose içindeki servis adın; bench dev server 8000'de dinliyor olmalı
 volumes:
   mariadb-data:
   #postgresql-data:
