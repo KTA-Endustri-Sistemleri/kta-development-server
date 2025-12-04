@@ -21,12 +21,12 @@ project-root/
 │
 ├── development/
 │   ├── installer.py
-│   ├── docker-compose.yml
 │   ├── sites/
 │   └── apps/
 │
 └── .devcontainer/
     └── devcontainer.json
+    ├── docker-compose.yml
 ```
 
 ---
