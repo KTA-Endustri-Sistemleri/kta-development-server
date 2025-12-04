@@ -1,0 +1,29 @@
+name: Test devcontainer docker-compose
+on:
+  push:
+    paths:
+      - '.devcontainer/**'
+  pull_request:
+    paths:
+      - '.devcontainer/**'
+
+jobs:
+  validate-and-pull:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Show docker & compose versions
+        run: |
+          docker --version || true
+          docker compose version || docker-compose --version || true
+
+      - name: Validate docker-compose file
+        run: docker compose -f .devcontainer/docker-compose.yml config
+
+      - name: Pull images referenced in docker-compose
+        run: docker compose -f .devcontainer/docker-compose.yml pull
