@@ -20,13 +20,11 @@ This setup automatically provisions a complete bench and site using a Python ins
 project-root/
 │
 ├── development/
-│   ├── installer.py
-│   ├── sites/
-│   └── apps/
+│   └── installer.py
 │
 └── .devcontainer/
     └── devcontainer.json
-    ├── docker-compose.yml
+    └── docker-compose.yml
 ```
 
 ---
