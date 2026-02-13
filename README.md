@@ -111,12 +111,12 @@ docker-compose exec frappe dev-frontend kta_employee
 **Option C: Start All Services with Tmux**
 ```bash
 docker-compose exec frappe bash
-/workspace/development/dev-all.sh
+/workspace/development/dev-all.sh [app_name]
 ```
 
 This command creates 3 tmux windows:
 - **Backend**: Frappe backend server (bench start)
-- **Frontend**: Vite development server
+- **Frontend**: Vite development server (default: kta_employee, or specify custom app)
 - **Shell**: General purpose command line
 
 ### Multi-Site Development
