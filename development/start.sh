@@ -12,8 +12,8 @@ EOF
 
 echo "📝 Created config.yaml with port 9090"
 
-# Start code-server on port 9090 in background
-code-server --bind-addr 0.0.0.0:9090 --auth password --cert false &
+# Start code-server on port 9090 in background with workspace
+code-server --bind-addr 0.0.0.0:9090 --auth password --cert false /workspace/development &
 
 echo "🚀 code-server started on http://localhost:9090"
 echo "📝 Use PASSWORD environment variable to set password"
