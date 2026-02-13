@@ -84,14 +84,25 @@ cd .devcontainer
 docker-compose up -d --build
 ```
 
+The container automatically:
+- ✅ Configures code-server on port 9090
+- ✅ Creates necessary directories with proper permissions
+- ✅ Opens `/workspace/development` as the workspace
+- ✅ Starts code-server in the background
+
 #### 2. Access code-server
-- Browser: http://localhost:9090
-- Password: `CODE_SERVER_PASSWORD` variable in `.env` file (default: `changeme`)
-- First time setup - create `.env` file:
+- **Browser**: http://localhost:9090
+- **Password**: Set via `CODE_SERVER_PASSWORD` in `.env` file
+- **First time setup** - create `.env` file:
   ```bash
   cp .env.example .env
-  # Edit .env and set CODE_SERVER_PASSWORD
+  # Edit .env and set CODE_SERVER_PASSWORD=your-secure-password
   ```
+
+**What you'll see**:
+- Frappe bench structure in the VS Code file explorer
+- All apps and sites accessible for editing
+- Full VS Code functionality in your browser
 
 #### 3. Frontend Development
 
@@ -123,6 +134,72 @@ This command creates 3 tmux windows:
 You can access different sites through Vite proxy routing:
 - `http://site1.localhost:8080` → Site: site1
 - `http://localhost:8080` → Site: localhost
+
+### Helper Scripts
+
+The development environment includes several helper scripts in `/workspace/development/`:
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `start.sh` | Container startup script | Automatically runs on container start |
+| `dev-frontend.sh` | Quick frontend dev setup | `dev-frontend <app_name>` |
+| `dev-all.sh` | Multi-window tmux workflow | `/workspace/development/dev-all.sh [app_name]` |
+
+**start.sh** automatically:
+1. Creates/updates code-server config with port 9090
+2. Ensures proper directory permissions
+3. Starts code-server with `/workspace/development` workspace
+4. Keeps container running
+
+---
+
+## 🔧 Troubleshooting
+
+### code-server Issues
+
+**Problem**: code-server shows "Please specify at least one file or folder"  
+**Solution**: This is already fixed in the latest version. The workspace path is automatically configured.
+
+**Problem**: code-server is on port 8080 instead of 9090  
+**Solution**: Restart the container. The startup script automatically recreates the config:
+```bash
+docker compose restart frappe
+```
+
+**Problem**: Permission denied errors  
+**Solution**: The startup script creates all necessary directories. If issues persist:
+```bash
+docker compose down
+docker compose up -d --build
+```
+
+### Port Conflicts
+
+If you see port conflicts:
+- **Port 9090**: code-server (browser-based VS Code)
+- **Port 8080**: Vite frontend dev server
+- **Port 8000**: Frappe backend
+
+Make sure these ports are not in use by other applications.
+
+### Accessing code-server
+
+1. Ensure container is running: `docker compose ps`
+2. Check logs: `docker compose logs frappe`
+3. Look for: `HTTP server listening on http://0.0.0.0:9090/`
+4. Access: http://localhost:9090
+
+### VS Code Extensions Not Persisting
+
+Extensions are stored in the `code-server-extensions` volume. If they disappear:
+```bash
+# Check volume exists
+docker volume ls | grep code-server-extensions
+
+# If needed, recreate volume (warning: will lose extensions)
+docker compose down -v
+docker compose up -d
+```
 
 ---
 

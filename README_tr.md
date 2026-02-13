@@ -86,14 +86,25 @@ cd .devcontainer
 docker-compose up -d --build
 ```
 
+Container otomatik olarak:
+- ✅ code-server'ı 9090 portunda yapılandırır
+- ✅ Gerekli dizinleri doğru izinlerle oluşturur
+- ✅ `/workspace/development` dizinini workspace olarak açar
+- ✅ code-server'ı arka planda başlatır
+
 #### 2. code-server'a Erişim
-- Tarayıcıda: http://localhost:9090
-- Şifre: `.env` dosyasındaki `CODE_SERVER_PASSWORD` değişkeni (varsayılan: `changeme`)
-- İlk kullanımda `.env` dosyası oluşturun:
+- **Tarayıcı**: http://localhost:9090
+- **Şifre**: `.env` dosyasındaki `CODE_SERVER_PASSWORD` değişkeni
+- **İlk kulanım** - `.env` dosyası oluşturun:
   ```bash
   cp .env.example .env
-  # .env dosyasını düzenleyin ve CODE_SERVER_PASSWORD'ü ayarlayın
+  # .env dosyasını düzenleyin ve CODE_SERVER_PASSWORD=guvenli-sifreniz ayarlayın
   ```
+
+**Göreceğiniz şeyler**:
+- VS Code dosya gezgininde Frappe bench yapısı
+- Düzenleme için erişilebilir tüm app'ler ve siteler
+- Tarayıcınızda tam VS Code işlevselliği
 
 #### 3. Frontend Geliştirme
 
@@ -125,6 +136,72 @@ Bu komut 3 tmux penceresi oluşturur:
 Vite proxy routing sayesinde farklı sitelere erişebilirsiniz:
 - `http://site1.localhost:8080` → Site: site1
 - `http://localhost:8080` → Site: localhost
+
+### Yardımcı Scriptler
+
+Geliştirme ortamı `/workspace/development/` dizininde birkaç yardımcı script içerir:
+
+| Script | Amaç | Kullanım |
+|--------|------|----------|
+| `start.sh` | Container başlatma scripti | Container başlangıcında otomatik çalışır |
+| `dev-frontend.sh` | Hızlı frontend geliştirme kurulumu | `dev-frontend <app_adi>` |
+| `dev-all.sh` | Çok pencereli tmux iş akışı | `/workspace/development/dev-all.sh [app_adi]` |
+
+**start.sh** otomatik olarak:
+1. code-server yapılandırmasını 9090 portu ile oluşturur/günceller
+2. Doğru dizin izinlerini sağlar
+3. code-server'ı `/workspace/development` workspace ile başlatır
+4. Container'ı çalışır durumda tutar
+
+---
+
+## 🔧 Sorun Giderme
+
+### code-server Sorunları
+
+**Problem**: code-server "Please specify at least one file or folder" hatası gösteriyor  
+**Çözüm**: Bu en son sürümde zaten düzeltilmiştir. Workspace yolu otomatik olarak yapılandırılır.
+
+**Problem**: code-server 9090 yerine 8080 portunda  
+**Çözüm**: Container'ı yeniden başlatın. Başlangıç scripti yapılandırmayı otomatik olarak yeniden oluşturur:
+```bash
+docker compose restart frappe
+```
+
+**Problem**: İzin reddedildi hataları  
+**Çözüm**: Başlangıç scripti gerekli tüm dizinleri oluşturur. Sorun devam ederse:
+```bash
+docker compose down
+docker compose up -d --build
+```
+
+### Port Çakışmaları
+
+Port çakışması görürseniz:
+- **Port 9090**: code-server (tarayıcı tabanlı VS Code)
+- **Port 8080**: Vite frontend geliştirme sunucusu
+- **Port 8000**: Frappe backend
+
+Bu portların başka uygulamalar tarafından kullanılmadığından emin olun.
+
+### code-server'a Erişim
+
+1. Container'ın çalıştığından emin olun: `docker compose ps`
+2. Logları kontrol edin: `docker compose logs frappe`
+3. Şunu arayın: `HTTP server listening on http://0.0.0.0:9090/`
+4. Erişim: http://localhost:9090
+
+### VS Code Eklentileri Kalıcı Değil
+
+Eklentiler `code-server-extensions` volume'ünde saklanır. Kaybolurlarsa:
+```bash
+# Volume'ün var olduğunu kontrol edin
+docker volume ls | grep code-server-extensions
+
+# Gerekirse volume'ü yeniden oluşturun (uyarı: eklentileri kaybedersiniz)
+docker compose down -v
+docker compose up -d
+```
 
 ---
 
