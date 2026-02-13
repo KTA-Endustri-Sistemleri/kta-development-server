@@ -23,8 +23,9 @@ RUN apt-get update && \
 # Switch back to frappe user
 USER frappe
 
-# code-server config directory
-RUN mkdir -p /home/frappe/.config/code-server
+# Create code-server directories with proper permissions
+RUN mkdir -p /home/frappe/.config/code-server && \
+    mkdir -p /home/frappe/.local/share/code-server
 
 # Default config (port 9090 - 8080 reserved for Vite)
 RUN echo -e "bind-addr: 0.0.0.0:9090\nauth: password\ncert: false" > /home/frappe/.config/code-server/config.yaml
