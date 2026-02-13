@@ -70,32 +70,32 @@ project-root/
 - **code-server (VS Code)**: http://localhost:9090
 - **Frappe Backend**: http://localhost:8000
 - **Frontend Dev (Vite)**: http://localhost:8080
-- **Alternatif Frontend Portları**: 8081-8085, 3000-3005, 5173-5178
+- **Alternative Frontend Ports**: 8081-8085, 3000-3005, 5173-5178
 
 ---
 
-## 🖥️ Code-Server ve Frontend Geliştirme
+## 🖥️ Code-Server and Frontend Development
 
-### Başlangıç
+### Getting Started
 
-#### 1. Container'ı Başlat
+#### 1. Start the Container
 ```bash
 cd .devcontainer
 docker-compose up -d --build
 ```
 
-#### 2. code-server'a Erişim
-- Tarayıcıda: http://localhost:9090
-- Şifre: `.env` dosyasındaki `CODE_SERVER_PASSWORD` değişkeni (varsayılan: `changeme`)
-- İlk kullanımda `.env` dosyası oluşturun:
+#### 2. Access code-server
+- Browser: http://localhost:9090
+- Password: `CODE_SERVER_PASSWORD` variable in `.env` file (default: `changeme`)
+- First time setup - create `.env` file:
   ```bash
   cp .env.example .env
   # Edit .env and set CODE_SERVER_PASSWORD
   ```
 
-#### 3. Frontend Geliştirme
+#### 3. Frontend Development
 
-**Seçenek A: Manuel**
+**Option A: Manual**
 ```bash
 docker-compose exec frappe bash
 cd apps/kta_employee/frontend
@@ -103,24 +103,24 @@ yarn install
 yarn dev
 ```
 
-**Seçenek B: Helper Script**
+**Option B: Helper Script**
 ```bash
 docker-compose exec frappe dev-frontend kta_employee
 ```
 
-**Seçenek C: Tmux ile Tüm Servisleri Başlat**
+**Option C: Start All Services with Tmux**
 ```bash
 docker-compose exec frappe bash
 /workspace/development/dev-all.sh
 ```
 
-Bu komut 3 tmux penceresi oluşturur:
+This command creates 3 tmux windows:
 - **Backend**: Frappe backend server (bench start)
 - **Frontend**: Vite development server
-- **Shell**: Genel amaçlı komut satırı
+- **Shell**: General purpose command line
 
-### Multi-Site Geliştirme
-Vite proxy routing sayesinde farklı sitelere erişebilirsiniz:
+### Multi-Site Development
+You can access different sites through Vite proxy routing:
 - `http://site1.localhost:8080` → Site: site1
 - `http://localhost:8080` → Site: localhost
 

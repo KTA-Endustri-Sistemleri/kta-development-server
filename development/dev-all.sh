@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# tmux session oluştur ve 3 pencere aç
+# Create tmux session and open 3 windows
 tmux new-session -d -s frappe-dev
 
 # Window 0: Frappe Backend
