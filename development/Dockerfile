@@ -2,15 +2,15 @@ FROM frappe/bench:latest
 
 USER root
 
-# code-server kurulumu
+# Install code-server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
-# Node.js 18.x ve yarn (frontend dev için)
+# Install Node.js 18.x and yarn (for frontend development)
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g yarn
 
-# Gerekli development araçları
+# Install required development tools
 RUN apt-get update && \
     apt-get install -y \
     git \
@@ -20,13 +20,13 @@ RUN apt-get update && \
     jq \
     && rm -rf /var/lib/apt/lists/*
 
-# frappe kullanıcısına geri dön
+# Switch back to frappe user
 USER frappe
 
-# code-server config dizini
+# code-server config directory
 RUN mkdir -p /home/frappe/.config/code-server
 
-# Varsayılan config (9090 portu - 8080 Vite için ayrıldı)
+# Default config (port 9090 - 8080 reserved for Vite)
 RUN echo "bind-addr: 0.0.0.0:9090\nauth: password\ncert: false" > /home/frappe/.config/code-server/config.yaml
 
 WORKDIR /workspace/development

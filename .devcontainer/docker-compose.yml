@@ -67,16 +67,16 @@ services:
       - 8000-8005:8000-8005
       - 9000-9005:9000-9005
       
-      # code-server (9090'a taşındı, 8080 Vite için ayrıldı)
+      # code-server (moved to 9090, 8080 reserved for Vite)
       - 9090:9090
       
       # Frontend Vite dev servers
-      - 8080:8080  # kta_employee ve diğer app'lerin Vite dev server'ı
-      - 8081-8085:8081-8085  # Diğer app'ler için alternatif portlar
+      - 8080:8080  # kta_employee and other apps' Vite dev server
+      - 8081-8085:8081-8085  # Alternative ports for other apps
       
-      # Alternatif frontend portlar
+      # Alternative frontend ports
       - 3000-3005:3000-3005  # Vite/React dev server
-      - 5173-5178:5173-5178  # Vite alternatif portlar
+      - 5173-5178:5173-5178  # Vite alternative ports
   # enable the below service if you need Cypress UI Tests to be executed
   # Before enabling ensure install_x11_deps.sh has been executed and display variable is exported.
   # Run install_x11_deps.sh again if DISPLAY is not set

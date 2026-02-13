@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# code-server'ı 9090 portunda background'da başlat
+# Start code-server on port 9090 in background
 code-server --bind-addr 0.0.0.0:9090 --auth password --cert false &
 
 echo "🚀 code-server started on http://localhost:9090"
@@ -14,5 +14,5 @@ echo "🔧 Frappe Backend:"
 echo "   - bench start (runs on http://localhost:8000)"
 echo ""
 
-# Container'ı ayakta tut
+# Keep container running
 sleep infinity
