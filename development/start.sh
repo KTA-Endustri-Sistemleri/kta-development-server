@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Ensure config directory exists
+mkdir -p /home/frappe/.config/code-server
+
+# Create/overwrite config.yaml with correct settings (port 9090)
+cat > /home/frappe/.config/code-server/config.yaml << 'EOF'
+bind-addr: 0.0.0.0:9090
+auth: password
+cert: false
+EOF
+
+echo "📝 Created config.yaml with port 9090"
+
 # Start code-server on port 9090 in background
 code-server --bind-addr 0.0.0.0:9090 --auth password --cert false &
 
