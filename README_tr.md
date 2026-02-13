@@ -113,12 +113,12 @@ docker-compose exec frappe dev-frontend kta_employee
 **Seçenek C: Tmux ile Tüm Servisleri Başlat**
 ```bash
 docker-compose exec frappe bash
-/workspace/development/dev-all.sh
+/workspace/development/dev-all.sh [app_adi]
 ```
 
 Bu komut 3 tmux penceresi oluşturur:
 - **Backend**: Frappe backend server (bench start)
-- **Frontend**: Vite development server
+- **Frontend**: Vite development server (varsayılan: kta_employee, veya özel app belirtin)
 - **Shell**: Genel amaçlı komut satırı
 
 ### Çoklu Site Geliştirme
