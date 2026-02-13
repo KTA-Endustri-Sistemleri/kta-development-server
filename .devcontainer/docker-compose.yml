@@ -43,19 +43,40 @@ services:
 
   frappe:
     image: docker.io/frappe/bench:latest
-    # If you want to build the current bench image the Containerfile is in this Repo.
-    # build: ../images/bench
-    command: sleep infinity
+    restart: unless-stopped
+    build:
+      context: ../development
+      dockerfile: Dockerfile
     environment:
       - SHELL=/bin/bash
+      - PASSWORD=${CODE_SERVER_PASSWORD:-changeme}
+      - VITE_HMR_PORT=8080
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     volumes:
       - ..:/workspace:cached
+      - code-server-data:/home/frappe/.config/code-server
+      - code-server-extensions:/home/frappe/.local/share/code-server
+      - node-modules-cache:/home/frappe/.cache
       # Enable if you require git cloning
       # - ${HOME}/.ssh:/home/frappe/.ssh
     working_dir: /workspace/development
     ports:
+      # Frappe/ERPNext backend
       - 8000-8005:8000-8005
       - 9000-9005:9000-9005
+      
+      # code-server (9090'a taşındı, 8080 Vite için ayrıldı)
+      - 9090:9090
+      
+      # Frontend Vite dev servers
+      - 8080:8080  # kta_employee ve diğer app'lerin Vite dev server'ı
+      - 8081-8085:8081-8085  # Diğer app'ler için alternatif portlar
+      
+      # Alternatif frontend portlar
+      - 3000-3005:3000-3005  # Vite/React dev server
+      - 5173-5178:5173-5178  # Vite alternatif portlar
   # enable the below service if you need Cypress UI Tests to be executed
   # Before enabling ensure install_x11_deps.sh has been executed and display variable is exported.
   # Run install_x11_deps.sh again if DISPLAY is not set
@@ -91,5 +112,8 @@ services:
     # Not: 'frappe' Compose içindeki servis adın; bench dev server 8000'de dinliyor olmalı
 volumes:
   mariadb-data:
+  code-server-data:
+  code-server-extensions:
+  node-modules-cache:
   #postgresql-data:
   #mailpit-data:
